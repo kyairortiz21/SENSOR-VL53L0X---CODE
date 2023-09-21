@@ -1,3 +1,7 @@
+// Código de funcionamiento del sensor VL53L0X para mostrar en una pantalla oled 128x64
+// Fuentes para la elaboración del código: Electropeak. A Shojaei.
+
+
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
