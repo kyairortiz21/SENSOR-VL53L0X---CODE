@@ -1,33 +1,3 @@
-# SENSOR-VL53L0X---CODE
-ARDUINO CODE VL53L0X TIME OF FLYGHT
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include "Adafruit_VL53L0X.h"
-
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-
-// Pinout para la OLED
-#define OLED_MOSI   9
-#define OLED_CLK    10
-#define OLED_DC     11
-#define OLED_CS     12
-#define OLED_RESET  13
-
-// Inicializar la pantalla OLED
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-Adafruit_VL53L0X lox = Adafruit_VL53L0X();
-
-void setup() {
-  Serial.begin(9600);
-
-  // Esperar hasta que el puerto serial se abra para dispositivos USB nativos
-  while (!Serial) {
-    delay(1);
-  }
-
   Serial.println("Prueba de Sensor de Distancia VL53L0X");
 
   // Inicializar el sensor de distancia
@@ -48,3 +18,53 @@ void setup() {
   display.setCursor(0, 0);
   display.println("Inicializando...");
   display.display();
+  delay(2000);
+  display.clearDisplay();
+  display.display();
+}
+
+void displayTimeOfFlight(double duration) {
+  display.clearDisplay();
+  display.setTextSize(1.8);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(10, 15);
+  display.print("Tiempo de Vuelo:");
+  display.setTextSize(3.5);
+  display.setCursor(10, 40);
+  display.print(duration, 1);
+  display.print(" ps");
+  display.display();
+}
+
+void loop() {
+  VL53L0X_RangingMeasurementData_t medida;
+
+  // Limpiar la pantalla y prepararse para nuevos datos
+  display.clearDisplay();
+  display.setTextSize(1.5);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.println("Midiendo Tiempo...");
+  display.display();
+
+  // Realizar la prueba de rango
+  lox.rangingTest(&medida, false);
+
+  // Calcular el tiempo de vuelo en picosegundos
+  double duration = medida.RangeMilliMeter * 2.0 * 3.335640952;
+
+  // Mostrar resultado del tiempo de vuelo
+  if (medida.RangeStatus != 4) {
+    displayTimeOfFlight(duration);
+    Serial.print("Tiempo de Vuelo: "); Serial.print(duration, 1); Serial.println(" ps");
+  } else {
+    display.clearDisplay();
+    display.setTextSize(1.8);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(15, 15);
+    display.println("Fuera de Rango");
+    display.display();
+  }
+
+  delay(1000);
+}
