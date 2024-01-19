@@ -1,5 +1,6 @@
 // Código de funcionamiento del sensor VL53L0X para mostrar en una pantalla oled 128x64
-// Fuentes para la elaboración del código: Electropeak. A Shojaei.
+// Fuentes para la elaboración del código: Electropeak. A Shojaei (https://electropeak.com/learn/interfacing-gy-530-vl53l0x-laser-distance-module-with-arduino/)
+// Jabolatorium( https://jabolatorium.com/Projects/Lightspeed/lightspeed.html)
 
 
 #include <SPI.h>
